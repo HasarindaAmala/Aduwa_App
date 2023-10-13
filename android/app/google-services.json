@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "898692484593",
+    "project_id": "aduwa-app",
+    "storage_bucket": "aduwa-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898692484593:android:993dfedfc28c12fafe0850",
+        "android_client_info": {
+          "package_name": "com.example.aduwaa_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBbrcTYr0YuL24qs6_Hu4uJPtF9ipAi84"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
