@@ -1,17 +1,20 @@
+import 'package:aduwaa_app/waitingScreen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_database/firebase_database.dart';
 class placeOrder extends StatefulWidget {
   final bool selectVeg;
   final bool selectFish;
   final bool selectChick;
   final bool wade;
   final bool parota;
+  final String index;
   const placeOrder({
     required this.selectVeg,
     required this.selectFish,
     required this.selectChick,
     required this.wade,
     required this.parota,
+    required this.index,
     Key? key,
   }) : super(key: key);
 
@@ -35,6 +38,9 @@ class _placeOrderState extends State<placeOrder> {
    int chickenVal = 1;
    int WadeVal = 1;
    int ParotaVal = 1;
+   late String index;
+
+  DatabaseReference _ref = FirebaseDatabase.instance.ref();
 
   @override
   void initState() {
@@ -46,7 +52,78 @@ class _placeOrderState extends State<placeOrder> {
     selectChick = widget.selectChick;
     wade = widget.wade;
     parota = widget.parota;
+    index = widget.index;
+
+
   }
+
+
+  void sendDataToDatabase( String index,
+      String vegval,
+      String fishval,
+      String chickval,
+      String wadeval,
+      String parotaval,) {
+    // Update the reference to the "user" node
+    DatabaseReference userRef = _ref.child('user').child(index);
+    Map<String, dynamic> orderDetails = {
+      'Veg': vegval,
+      'Fish': fishval,
+      'Chicken': chickval,
+      'Wade': wadeval,
+      'Parota': parotaval,
+    };
+    // Use the set method to update data1, data2, and data3
+    // Update only the order details for the user using the key (index)
+    userRef.set({
+      'index no': index,
+      'order details': orderDetails,
+    }).then((_) {
+      print("Data updated in Firebase successfully, and previous record deleted.");
+    }).catchError((error) {
+      print("Error updating data in Firebase: $error");
+    });
+  }
+
+  // void sendDataToDatabase(
+  //     String index,
+  //     String vegval,
+  //     String fishval,
+  //     String chickval,
+  //     String wadeval,
+  //     String parotaval,
+  //     ) {
+  //   if (_ref != null) {
+  //     // Update the reference to the "user" node
+  //
+  //
+  //     // Create a map to store order details
+  //     Map<String, dynamic> orderDetails = {
+  //       'Veg': vegval,
+  //       'Fish': fishval,
+  //       'Chicken': chickval,
+  //       'Wade': wadeval,
+  //       'Parota': parotaval,
+  //     };
+  //   print(orderDetails);
+  //     print("userRef path: ${_ref!.path}");
+  //
+  //     // Use the set method to update the data in Firebase
+  //     _ref!.set({
+  //       'index no': index,
+  //       'order': 'Order',
+  //       'order details': orderDetails,
+  //     }).then((_) {
+  //       print("Data added to Firebase successfully.");
+  //     }).catchError((error) {
+  //       print("Error adding data to Firebase: $error");
+  //     });
+  //   } else {
+  //     print("_Ref is null. Ensure it's correctly initialized.");
+  //   }
+  // }
+
+
 
 
   @override
@@ -391,6 +468,44 @@ class _placeOrderState extends State<placeOrder> {
                   children: [
                     SizedBox(width: width*0.01,),
                     ElevatedButton(onPressed: (){
+
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white.withOpacity(0.66),
+                            title: Text("Confirm Order"),
+                            content: Text("Your total is : Rs" + total.toString()),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("Wait"),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+
+                                },
+                              ),
+                              TextButton(
+                                child: Text("Confirm"),
+                                onPressed: () {
+                                  setState(() {
+                                    sendDataToDatabase(index, selectVeg?vegVal.toString():"no", selectFish? fishVal.toString():'no', selectChick? chickenVal.toString():'no', wade? WadeVal.toString():'no', parota ? ParotaVal.toString():'no');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => waitingScreen(
+                                        ),
+                                      ),
+                                    );
+                                  });
+
+
+                                },
+                              ),
+
+                            ],
+                          );
+                        },
+                      );
 
                     },
                       child: Text("Place Order",style: TextStyle(fontSize: width*0.05),),

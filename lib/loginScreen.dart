@@ -239,7 +239,7 @@ class _loginScreenState extends State<loginScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Order_screen(),
+          builder: (context) => Order_screen(password:password),
         ),
       );
     } else {

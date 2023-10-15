@@ -2,7 +2,8 @@ import 'package:aduwaa_app/placeOrder.dart';
 import 'package:flutter/material.dart';
 
 class Order_screen extends StatefulWidget {
-  const Order_screen({super.key});
+  final String password;
+  const Order_screen({required this.password,Key? key,}) : super(key: key);
 
   @override
   State<Order_screen> createState() => _Order_screenState();
@@ -288,6 +289,7 @@ class _Order_screenState extends State<Order_screen> {
                             selectChick: selectchick,
                             wade: wade,
                             parota: parota,
+                            index: widget.password,
                           ),
                         ),
                       );
