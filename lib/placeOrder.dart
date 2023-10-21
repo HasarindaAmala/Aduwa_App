@@ -78,6 +78,7 @@ class _placeOrderState extends State<placeOrder> {
       'Parota': parotaval,
 
     };
+    print(index);
     // Use the set method to update data1, data2, and data3
     // Update only the order details for the user using the key (index)
     userRef.set({
@@ -89,7 +90,7 @@ class _placeOrderState extends State<placeOrder> {
       'Wade': wadeval,
       'Parota': parotaval,
     }).then((_) {
-      print("Data updated in Firebase successfully, and previous record deleted.");
+      print("Data updated in Firebase successfully, and previous record deleted." + index);
     }).catchError((error) {
       print("Error updating data in Firebase: $error");
     });
