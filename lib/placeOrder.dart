@@ -1,6 +1,8 @@
 import 'package:aduwaa_app/waitingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:intl/intl.dart';
+
 class placeOrder extends StatefulWidget {
   final bool selectVeg;
   final bool selectFish;
@@ -66,18 +68,26 @@ class _placeOrderState extends State<placeOrder> {
       String parotaval,) {
     // Update the reference to the "user" node
     DatabaseReference userRef = _ref.child('user').child(index);
+    // Get the current date and time
+    String currentDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
     Map<String, dynamic> orderDetails = {
       'Veg': vegval,
       'Fish': fishval,
       'Chicken': chickval,
       'Wade': wadeval,
       'Parota': parotaval,
+
     };
     // Use the set method to update data1, data2, and data3
     // Update only the order details for the user using the key (index)
     userRef.set({
-      'index no': index,
-      'order details': orderDetails,
+      'index':index,
+      'time': currentDate,
+      'Veg': vegval,
+      'Fish': fishval,
+      'Chicken': chickval,
+      'Wade': wadeval,
+      'Parota': parotaval,
     }).then((_) {
       print("Data updated in Firebase successfully, and previous record deleted.");
     }).catchError((error) {
@@ -473,7 +483,7 @@ class _placeOrderState extends State<placeOrder> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            backgroundColor: Colors.white.withOpacity(0.66),
+                            backgroundColor: Colors.white,
                             title: Text("Confirm Order"),
                             content: Text("Your total is : Rs" + total.toString()),
                             actions: <Widget>[
@@ -492,8 +502,7 @@ class _placeOrderState extends State<placeOrder> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => waitingScreen(
-                                        ),
+                                        builder: (context) => waitingScreen(index:index),
                                       ),
                                     );
                                   });

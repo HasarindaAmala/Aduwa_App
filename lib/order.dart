@@ -1,5 +1,7 @@
+import 'package:aduwaa_app/loginScreen.dart';
 import 'package:aduwaa_app/placeOrder.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Order_screen extends StatefulWidget {
   final String password;
@@ -24,6 +26,74 @@ class _Order_screenState extends State<Order_screen> {
 
 
     return Scaffold(
+      appBar:
+      PreferredSize(
+        preferredSize: Size.fromHeight(height*0.1),
+        child: AppBar(
+          backgroundColor: Colors.white.withOpacity(0.11),
+          title:
+          Text(
+            "FIND YOUR \nFAVORITE FOODS",
+            style: TextStyle(fontSize: width * 0.07, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      drawer: Drawer(
+
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text("UserName :"+widget.password),
+              accountEmail: Text(''),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Text('JD'),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => loginScreen(
+                    ),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('logout'),
+              onTap: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('remember_me');
+                  await prefs.remove('index');
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Signed Out"),
+                      content: Text("Signed Out Successfully"),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text("OK"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+              },
+            ),
+          ],
+        ),
+      ),
       backgroundColor: Colors.black,
       body: Container(
         decoration: BoxDecoration(
@@ -41,11 +111,7 @@ class _Order_screenState extends State<Order_screen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: height * 0.1),
-                Text(
-                  "FIND YOUR \nFAVORITE FOODS",
-                  style: TextStyle(fontSize: width * 0.07, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+
                 SizedBox(height: height * 0.04),
                 Text(
                   "Select Your Canteen",

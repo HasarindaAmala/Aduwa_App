@@ -3,6 +3,7 @@ import 'package:aduwaa_app/order.dart';
 import 'package:aduwaa_app/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class loginScreen extends StatefulWidget {
   const loginScreen({super.key});
@@ -17,6 +18,45 @@ class _loginScreenState extends State<loginScreen> {
   TextEditingController indexController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool correct = true;
+  bool rememberMe = false;
+
+  @override
+  void initState() {
+    super.initState();
+    print("iit state");
+    // Check if "Remember Me" was previously selected and load the value.
+    _loadRememberMePreference();
+
+  }
+
+  _loadRememberMePreference() async {
+    print("loaded");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      rememberMe = prefs.getBool('remember_me') ?? false;
+      indexController.text = prefs.getString('index') ?? '';
+    });
+    print(rememberMe);
+    if (rememberMe) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Order_screen(password: indexController.text),
+        ),
+      );
+    }
+  }
+
+  _saveRememberMePreference(bool value , String Index) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('remember_me', value);
+    prefs.setString('index', Index);
+    print("success");
+    print(value);
+    print(Index);
+
+  }
+
   @override
   void dispose() {
     usernameController.dispose();
@@ -52,14 +92,9 @@ class _loginScreenState extends State<loginScreen> {
             )
             ),
             Positioned(
-              top: height*0.4,
-              left: width*0.05,
-              child: Container(
-                width: width*0.9,
-                height: height*0.15,
+              top: height*0.395,
+              left: width*0.09,
 
-                child: Container(
-                  alignment: Alignment.centerLeft,
                   child: Column(
                     crossAxisAlignment:CrossAxisAlignment.start,
                     children:[
@@ -68,8 +103,8 @@ class _loginScreenState extends State<loginScreen> {
                     Text("BACK!",style: TextStyle(fontSize: width*0.13,fontWeight: FontWeight.normal,color: Colors.white),),
                   ],
                 ),
-              ),
-            ),
+
+
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,6 +214,7 @@ class _loginScreenState extends State<loginScreen> {
                   ),
                 ),
 
+
                 SizedBox(height: height*0.02,),
                 Container(
                   alignment: Alignment.centerRight,
@@ -201,10 +237,46 @@ class _loginScreenState extends State<loginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: height*0.02,),
-                ElevatedButton(onPressed: signIn,
+                SizedBox(height: height*0.01,),
 
-                    child: Icon(Icons.arrow_forward_ios,size: width*0.4*0.2,),
+
+                 Container(
+                   width: width*0.52,
+                   alignment: Alignment.center,
+                   child: CheckboxListTile(
+
+                      title: Text('Remember Me',style: TextStyle(color: Colors.white),),
+                      value: rememberMe,
+                      onChanged: (value) {
+                        setState(() {
+                          rememberMe = value!;
+                          print(rememberMe);
+                        });
+                      },
+                   // tileColor: Colors.white.withOpacity(0.22),
+                     contentPadding: EdgeInsets.fromLTRB(width*0.06, 0, width*0.05, 0),
+
+
+                     side: BorderSide(color: Colors.white),
+                    ),
+                 ),
+
+                SizedBox(height: height*0.01,),
+                ElevatedButton(onPressed: (){
+
+                  if (rememberMe) {
+                    print("checked");
+                    _saveRememberMePreference(rememberMe,indexController.text);
+                    signIn();
+
+                  } else {
+                    print("not checked");
+                    signIn();
+                  }
+                },
+
+
+                    child: Icon(Icons.arrow_forward,size: width*0.4*0.2,color: Colors.black,),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.yellow,
                       fixedSize: Size(width*0.4, height*0.05 ),
@@ -251,7 +323,7 @@ class _loginScreenState extends State<loginScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Sign In Failed"),
-            content: Text("please chech email and registration no again!"),
+            content: Text("please check email and registration no again!"),
             actions: <Widget>[
               TextButton(
                 child: Text("OK"),

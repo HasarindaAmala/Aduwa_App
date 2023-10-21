@@ -1,4 +1,5 @@
 import 'package:aduwaa_app/firebase_auth.dart';
+import 'package:aduwaa_app/loginScreen.dart';
 import 'package:aduwaa_app/order.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,7 +48,7 @@ class _signup_screenState extends State<signup_screen> {
                   width: width*1.2,
                   height: width*1.2,
 
-                  decoration: BoxDecoration( color: Colors.yellow,borderRadius: BorderRadius.circular(width*0.9)),
+                  decoration: BoxDecoration( color: Colors.green,borderRadius: BorderRadius.circular(width*0.9)),
                 )
             ),
             Positioned(
@@ -183,7 +184,7 @@ class _signup_screenState extends State<signup_screen> {
                 SizedBox(height: height*0.02,),
                 ElevatedButton(onPressed:(){
                   signUp();
-                  Navigator.of(context).pop();
+
                 } ,
 
                   child: Text("SIGN UP",style: TextStyle(color: Colors.black),),
@@ -207,7 +208,12 @@ class _signup_screenState extends State<signup_screen> {
                     SizedBox(width: width*0.03,),
                     GestureDetector(
                       onTap: (){
-                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => loginScreen(),
+                          ),
+                        );
                       },
                         child: Text("SignIn",style: TextStyle(color: Colors.blue,fontSize: width*0.05),)
       ),
@@ -231,28 +237,34 @@ class _signup_screenState extends State<signup_screen> {
     User? user = await _auth.SignUp(email, password);
 
     if (user != null) {
-      print("succesfully signedIn");
+      print("succesfully signed Up");
       setState(() {
         correct = true;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Registered"),
+              content: Text("Registration Succesfully!"),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => loginScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
       });
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Registered"),
-            content: Text("Registration Succesfully!"),
-            actions: <Widget>[
-              TextButton(
-                child: Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      Navigator.of(context).pop();
+
+
     } else {
       setState(() {
         correct = false;
@@ -261,13 +273,18 @@ class _signup_screenState extends State<signup_screen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Sign In Failed"),
-            content: Text("please chech email and registration no again!"),
+            title: Text("Sign Up Failed"),
+            content: Text("please check email and registration no again!"),
             actions: <Widget>[
               TextButton(
                 child: Text("OK"),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => signup_screen(),
+                    ),
+                  );
                 },
               ),
             ],

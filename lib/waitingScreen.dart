@@ -1,8 +1,12 @@
+import 'package:aduwaa_app/loginScreen.dart';
+import 'package:aduwaa_app/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class waitingScreen extends StatefulWidget {
-  const waitingScreen({super.key});
+  final String index;
+  const waitingScreen({required this.index,
+    Key? key,}): super(key: key);
 
   @override
   State<waitingScreen> createState() => _waitingScreenState();
@@ -30,7 +34,13 @@ class _waitingScreenState extends State<waitingScreen> {
             Text("Successfully!",style: TextStyle(fontSize: width*0.09,fontWeight: FontWeight.bold,color: Colors.lightGreen),),
             SizedBox(height: height*0.05,),
             ElevatedButton(onPressed: (){
-              SystemNavigator.pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => loginScreen(
+                  ),
+                ),
+              );
             },
               child: Container(
                 height: height*0.05,

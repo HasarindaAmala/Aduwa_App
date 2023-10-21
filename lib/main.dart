@@ -1,4 +1,5 @@
 import 'package:aduwaa_app/loginScreen.dart';
+import 'package:aduwaa_app/modeSelection.dart';
 import 'package:flutter/material.dart';
 import 'package:aduwaa_app/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
   }
@@ -31,7 +32,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  @override
+  void initState() {
+    super.initState();
+    // Delay for 2 seconds and then navigate to the next screen
+    Future.delayed(Duration(seconds: 3), () {
+      // Use Navigator to push the next screen onto the stack
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => ModeSelection(),
+      ));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +60,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                    builder: (context) => const loginScreen()),);
+                    builder: (context) => const ModeSelection()),);
               },
               child: Container(
                 width: width,
                 height: height,
-                decoration: BoxDecoration(image: DecorationImage(image: AssetImage('Assets/images/tara-evans-6FbArnPXEVg-unsplash (1).jpg'),fit: BoxFit.fill,opacity: 0.22)),
+                decoration: BoxDecoration(image: DecorationImage(image: AssetImage('Assets/images/tara-evans-6FbArnPXEVg-unsplash (1).jpg'),fit: BoxFit.fill,opacity: 0.4)),
 
               ),
             ),
@@ -68,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const loginScreen()),);
+                        builder: (context) => const ModeSelection()),);
                 },
                 child: Container(
 
@@ -84,14 +95,16 @@ class _MyHomePageState extends State<MyHomePage> {
           Positioned(
             top: height*0.55,
 
+
             child: GestureDetector(
               onTap: (){
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const loginScreen()),);
+                      builder: (context) => const ModeSelection()),);
               },
               child: Container(
+                alignment: Alignment.center,
 
                 width: width,
                 height: height*0.38,
@@ -100,6 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
               ),
             ),
+
+
           ),
 
         ],
